@@ -8,7 +8,7 @@ CNWNXNeo4j::~CNWNXNeo4j() {
     OnRelease();
 }
 
-bool CNWNXHashSet::OnCreate(gline *config, const char* LogDir)
+bool CNWNXNeo4j::OnCreate(gline *config, const char* LogDir)
 {
     char log[128];
     sprintf(log, "%s/nwnx_neo4j.txt", LogDir);

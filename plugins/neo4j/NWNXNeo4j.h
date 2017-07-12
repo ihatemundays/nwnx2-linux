@@ -8,7 +8,7 @@ public:
     CNWNXNeo4j();
     virtual ~CNWNXNeo4j();
 
-    bool OnCreate(gline *nwnxConfig, const char* LogDir = NULL);
+    bool OnCreate(gline *config, const char* LogDir);
     char* OnRequest(char* gameObject, char* Request, char* Parameters);
     bool OnRelease();
 
