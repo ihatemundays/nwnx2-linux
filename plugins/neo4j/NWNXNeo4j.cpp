@@ -36,7 +36,7 @@ char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
         Fetch(arguments, strlen(arguments));
     }
 
-    return null;
+    return NULL;
 }
 
 bool CNWNXNeo4j::OnRelease () {
