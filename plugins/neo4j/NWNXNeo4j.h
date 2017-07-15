@@ -2,10 +2,12 @@
 #define NWNXNeo4j_H_
 
 #include "NWNXBase.h"
+#include <boost/asio.hpp>
+
+using namespace std;
 
 class CNWNXNeo4j: public CNWNXBase {
 public:
-    CNWNXNeo4j();
     virtual ~CNWNXNeo4j();
 
     bool OnCreate(gline *config, const char* LogDir);
@@ -13,21 +15,18 @@ public:
     bool OnRelease();
 
 protected:
-    bool Connect();
-    void Query(const char* request);
-    void Fetch(char* buffer, unsigned int buffersize);
     bool LoadConfiguration();
+    char *Query(char *arguments);
+    // void Fetch(char* buffer, unsigned int buffersize);
+
 
 private:
-    struct PARAMETERS {
-        char *hostname;
-        char *port;
-        char *username;
-        char *password;
-    } parameters;
-
-    enum LogLevel {logNone, logErrors, logAll};
-    int logLevel;
+    struct ConnectionParameters {
+        std::string hostname;
+        int port;
+        std::string username;
+        std::string password;
+    } connectionParameters;
 };
 
 #endif
