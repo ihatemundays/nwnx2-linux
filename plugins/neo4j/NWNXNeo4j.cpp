@@ -116,14 +116,14 @@ char *CWNNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
         return NULL;
     }
 
-    std::stringstream result;
+    std::stringstream ss;
     for (int i = 0; i < neo4j_nfields(results); ++i) {
         if (i != 0) {
-            result << '�';
+            ss << '�';
         }
 
-        result << neo4j_result_field(result, i);
+        ss << neo4j_result_field(result, i);
     }
 
-    return (char*)result.str().c_str();
+    return (char*)ss.str().c_str();
 }
