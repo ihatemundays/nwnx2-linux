@@ -1,5 +1,9 @@
 #include "NWNXNeo4j.h"
 
+CNWNXNeo4j::CWNXNeo4j() {
+    confKey = "NEO4J";
+}
+
 CNWNXNeo4j::~CNWNXNeo4j() {
     Disconnect();
 

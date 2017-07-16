@@ -9,7 +9,8 @@ using namespace std;
 
 class CNWNXNeo4j: public CNWNXBase {
 public:
-    virtual ~CNWNXNeo4j();
+    CWNXNeo4j();
+    ~CNWNXNeo4j();
 
     bool OnCreate(gline *config, const char* LogDir);
     char* OnRequest(char* gameObject, char* Request, char* Parameters);
