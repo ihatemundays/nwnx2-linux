@@ -3,6 +3,7 @@
 
 #include "NWNXBase.h"
 #include <neo4j-client.h>
+#include <sstream>
 
 using namespace std;
 
@@ -24,7 +25,7 @@ protected:
 private:
     struct ConnectionParameters {
         std::string hostname;
-        int port;
+        std::string port;
         std::string username;
         std::string password;
     } connectionParameters;

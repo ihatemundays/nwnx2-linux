@@ -38,7 +38,7 @@ bool CNWNXNeo4j::LoadConfiguration() {
     }
 
     connectionParameters.hostname = (char*)((*nwnxConfig)[confKey]["hostname"].c_str());
-    connectionParameters.port = (int)((*nwnxConfig)[confKey]["port"].c_str());
+    connectionParameters.port = (char*)((*nwnxConfig)[confKey]["port"].c_str());
     connectionParameters.username = (char*)((*nwnxConfig)[confKey]["username"].c_str());
     connectionParameters.password = (char*)((*nwnxConfig)[confKey]["password"].c_str());
 
@@ -67,7 +67,7 @@ void CNWNXNeo4j::Disconnect() {
     }
 
     if (connection != NULL) {
-        neo4j_close_connection(connection);
+        neo4j_close(connection);
     }
 
     neo4j_client_cleanup();
@@ -78,7 +78,7 @@ char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
     Log(3, "Arguments:  \"%s\"\n", arguments);
 
     if (strcmp(request, "EXEC") == 0) {
-        Query(arguments);
+        Exec(arguments);
     } else if (strcmp(request, "FETCH") == 0) {
         return Fetch(arguments, strlen(arguments));
     }
@@ -90,7 +90,7 @@ bool CNWNXNeo4j::OnRelease () {
     return CNWNXBase::OnRelease();
 }
 
-void CNWNXNeo4j::Query(char *query) {
+void CNWNXNeo4j::Exec(char *query) {
     Disconnect();
     if (!Connect()) {
         return;
