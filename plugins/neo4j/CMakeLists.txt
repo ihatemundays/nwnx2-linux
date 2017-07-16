@@ -1,12 +1,3 @@
-find_package(Boost REQUIRED)
-if (Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIR})
-    add_module(neo4j NWNXNeo4j plugin-neo4j)
-    target_link_libraries(neo4j
-            ${Boost_LIBRARIES}
-            libneo4j-client)
-
-    set_target_properties(neo4j PROPERTIES COMPILE_FLAGS "-O0")
-else (Boost_FOUND)
-    message(WARNING "Cannot find boost libraries, not building neo4j")
-endif (Boost_FOUND)
+add_module(neo4j NWNXNeo4j plugin-neo4j)
+target_link_libraries(neo4j neo4j-client)
+set_target_properties(neo4j PROPERTIES COMPILE_FLAGS "-O0")
