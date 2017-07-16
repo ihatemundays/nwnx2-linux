@@ -25,8 +25,6 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* LogDir)
         return false;
     }
 
-    Disconnect();
-
     return true;
 }
 
