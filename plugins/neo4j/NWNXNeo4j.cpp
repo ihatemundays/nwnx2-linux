@@ -61,7 +61,7 @@ bool CNWNXNeo4j::Connect() {
     return true;
 }
 
-void CWNNXNeo4j::Disconnect() {
+void CNWNXNeo4j::Disconnect() {
     if (results != NULL) {
         neo4j_close_results(results);
     }
@@ -104,7 +104,7 @@ void CNWNXNeo4j::Query(char *query) {
     }
 }
 
-char *CWNNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
+char *CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     if (results == NULL) {
         Log(1, "Failed to fetch result.");
 
