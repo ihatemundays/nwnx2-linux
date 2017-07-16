@@ -29,34 +29,47 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* LogDir)
 }
 
 bool CNWNXNeo4j::LoadConfiguration() {
-    if (!nwnxConfig->exists(confKey)) {
-        Log(0, "o Critical Error: Section [%s] not found in nwnx2.ini.\n", confKey);
+    try {
+        if (!nwnxConfig->exists(confKey)) {
+            Log(0, "o Critical Error: Section [%s] not found in nwnx2.ini.\n", confKey);
+
+            return false;
+        }
+
+        connectionParameters.hostname = (char*)((*nwnxConfig)[confKey]["hostname"].c_str());
+        connectionParameters.port = (char*)((*nwnxConfig)[confKey]["port"].c_str());
+        connectionParameters.username = (char*)((*nwnxConfig)[confKey]["username"].c_str());
+        connectionParameters.password = (char*)((*nwnxConfig)[confKey]["password"].c_str());
+
+        return true;
+    } catch (const std::exception& e) {
+        Log(0, e.what());
 
         return false;
     }
 
-    connectionParameters.hostname = (char*)((*nwnxConfig)[confKey]["hostname"].c_str());
-    connectionParameters.port = (char*)((*nwnxConfig)[confKey]["port"].c_str());
-    connectionParameters.username = (char*)((*nwnxConfig)[confKey]["username"].c_str());
-    connectionParameters.password = (char*)((*nwnxConfig)[confKey]["password"].c_str());
-
-    return true;
 }
 
 bool CNWNXNeo4j::Connect() {
-    neo4j_client_init();
+    try {
+        neo4j_client_init();
 
-    connection = neo4j_connect((new std::string("neo4j://" + connectionParameters.hostname + ':' + connectionParameters.port))->c_str(),
-                               NULL,
-                               NEO4J_INSECURE);
+        connection = neo4j_connect((new std::string("neo4j://" + connectionParameters.hostname + ':' + connectionParameters.port))->c_str(),
+                                   NULL,
+                                   NEO4J_INSECURE);
 
-    if (connection == NULL) {
-        Log(0, "o Connection failed.\n");
+        if (connection == NULL) {
+            Log(0, "o Connection failed.\n");
+
+            return false;
+        }
+
+        return true;
+    } catch (const std::exception& e) {
+        Log(0, e.what());
 
         return false;
     }
-
-    return true;
 }
 
 void CNWNXNeo4j::Disconnect() {
