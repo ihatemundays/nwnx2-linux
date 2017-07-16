@@ -2,7 +2,7 @@
 #define NWNXNeo4j_H_
 
 #include "NWNXBase.h"
-#include <boost/asio.hpp>
+#include <neo4j-client.h>
 
 using namespace std;
 
@@ -15,10 +15,11 @@ public:
     bool OnRelease();
 
 protected:
+    bool Connect();
+    void Disconnect();
     bool LoadConfiguration();
-    char *Query(char *arguments);
-    // void Fetch(char* buffer, unsigned int buffersize);
-
+    void Exec(char *query);
+    char *Fetch(char *buffer, unsigned int bufferSize);
 
 private:
     struct ConnectionParameters {
@@ -27,6 +28,9 @@ private:
         std::string username;
         std::string password;
     } connectionParameters;
+
+    neo4j_connection_t *connection;
+    neo4j_result_stream_t *results;
 };
 
 #endif

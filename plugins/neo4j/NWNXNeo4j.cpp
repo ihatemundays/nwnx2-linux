@@ -1,99 +1,8 @@
 #include "NWNXNeo4j.h"
 
-static const std::string base64_chars =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                "abcdefghijklmnopqrstuvwxyz"
-                "0123456789+/";
-
-
-static inline bool is_base64(unsigned char c) {
-    return (isalnum(c) || (c == '+') || (c == '/'));
-}
-
-std::string base64_encode(unsigned char const* bytes_to_encode, unsigned int in_len) {
-    std::string ret;
-    int i = 0;
-    int j = 0;
-    unsigned char char_array_3[3];
-    unsigned char char_array_4[4];
-
-    while (in_len--) {
-        char_array_3[i++] = *(bytes_to_encode++);
-        if (i == 3) {
-            char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-            char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-            char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
-            char_array_4[3] = char_array_3[2] & 0x3f;
-
-            for(i = 0; (i <4) ; i++)
-                ret += base64_chars[char_array_4[i]];
-            i = 0;
-        }
-    }
-
-    if (i)
-    {
-        for(j = i; j < 3; j++)
-            char_array_3[j] = '\0';
-
-        char_array_4[0] = (char_array_3[0] & 0xfc) >> 2;
-        char_array_4[1] = ((char_array_3[0] & 0x03) << 4) + ((char_array_3[1] & 0xf0) >> 4);
-        char_array_4[2] = ((char_array_3[1] & 0x0f) << 2) + ((char_array_3[2] & 0xc0) >> 6);
-        char_array_4[3] = char_array_3[2] & 0x3f;
-
-        for (j = 0; (j < i + 1); j++)
-            ret += base64_chars[char_array_4[j]];
-
-        while((i++ < 3))
-            ret += '=';
-
-    }
-
-    return ret;
-
-}
-std::string base64_decode(std::string const& encoded_string) {
-    int in_len = encoded_string.size();
-    int i = 0;
-    int j = 0;
-    int in_ = 0;
-    unsigned char char_array_4[4], char_array_3[3];
-    std::string ret;
-
-    while (in_len-- && ( encoded_string[in_] != '=') && is_base64(encoded_string[in_])) {
-        char_array_4[i++] = encoded_string[in_]; in_++;
-        if (i ==4) {
-            for (i = 0; i <4; i++)
-                char_array_4[i] = base64_chars.find(char_array_4[i]);
-
-            char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-            char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
-            char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
-
-            for (i = 0; (i < 3); i++)
-                ret += char_array_3[i];
-            i = 0;
-        }
-    }
-
-    if (i) {
-        for (j = i; j <4; j++)
-            char_array_4[j] = 0;
-
-        for (j = 0; j <4; j++)
-            char_array_4[j] = base64_chars.find(char_array_4[j]);
-
-        char_array_3[0] = (char_array_4[0] << 2) + ((char_array_4[1] & 0x30) >> 4);
-        char_array_3[1] = ((char_array_4[1] & 0xf) << 4) + ((char_array_4[2] & 0x3c) >> 2);
-        char_array_3[2] = ((char_array_4[2] & 0x3) << 6) + char_array_4[3];
-
-        for (j = 0; (j < i - 1); j++) ret += char_array_3[j];
-    }
-
-    return ret;
-}
-
 CNWNXNeo4j::~CNWNXNeo4j() {
+    Disconnect();
+
     OnRelease();
 }
 
@@ -112,12 +21,18 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* LogDir)
         return false;
     }
 
+    if (!Connect()) {
+        return false;
+    }
+
+    Disconnect();
+
     return true;
 }
 
 bool CNWNXNeo4j::LoadConfiguration() {
     if (!nwnxConfig->exists(confKey)) {
-        Log(0, "o Critical Error: Section [%s] not found in nwnx2.ini\n", confKey);
+        Log(0, "o Critical Error: Section [%s] not found in nwnx2.ini.\n", confKey);
 
         return false;
     }
@@ -130,12 +45,42 @@ bool CNWNXNeo4j::LoadConfiguration() {
     return true;
 }
 
+bool CNWNXNeo4j::Connect() {
+    neo4j_client_init();
+
+    connection = neo4j_connect("neo4j://" + connectionParameters.hostname + ':' + connectionParameters.port,
+                               NULL,
+                               NEO4J_INSECURE);
+
+    if (connection == NULL) {
+        Log(0, "o Connection failed.\n");
+
+        return false;
+    }
+
+    return true;
+}
+
+void CWNNXNeo4j::Disconnect() {
+    if (results != NULL) {
+        neo4j_close_results(results);
+    }
+
+    if (connection != NULL) {
+        neo4j_close_connection(connection);
+    }
+
+    neo4j_client_cleanup();
+}
+
 char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
     Log(2, "Request: \"%s\"\n", request);
     Log(3, "Arguments:  \"%s\"\n", arguments);
 
-    if (strcmp(request, "QUERY") == 0) {
-        return Query(arguments);
+    if (strcmp(request, "EXEC") == 0) {
+        Query(arguments);
+    } else if (strcmp(request, "FETCH") == 0) {
+        return Fetch(arguments, strlen(arguments));
     }
 
     return NULL;
@@ -145,39 +90,40 @@ bool CNWNXNeo4j::OnRelease () {
     return CNWNXBase::OnRelease();
 }
 
-char *CNWNXNeo4j::Query(char *arguments) {
-    using namespace boost::asio;
+void CNWNXNeo4j::Query(char *query) {
+    Disconnect();
+    if (!Connect()) {
+        return;
+    }
 
-    // what we need
-    io_service svc;
-    ip::tcp::socket sock(svc);
-    ip::tcp::endpoint endpoint(ip::address::from_string(connectionParameters.hostname), connectionParameters.port);
-    sock.connect(endpoint);
+    results = neo4j_run(connection, arguments, neo4j_null);
+    if (results == NULL) {
+        Log(1, "Failed to run statement.");
 
-    std::string credentials = connectionParameters.username + ':' + connectionParameters.password;
-    std::string encryptedCredentials = base64_encode(reinterpret_cast<const unsigned char*>(credentials.c_str()), credentials.length())
+        return;
+    }
+}
 
-    // Send query.
-    std::string request("POST /db/data/cypher HTTP/1.1\n"
-                        "Accept: application/json\n"
-                        "Content-Type: application/json\n"
-                        "Authorization: Basic " + encryptedCredentials + "\n"
-                        "Cache-Control: no-cache\n"
-                        "\n"
-                        "{\n"
-                        "\t\"query\": \"MATCH (n) RETURN n\"\n"
-                        "}");
-    sock.send(buffer(request));
+char *CWNNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
+    if (results == NULL) {
+        Log(1, "Failed to fetch result.");
 
-    // Get response.
-    std::string response = "";
+        return NULL;
+    }
 
-    boost::system::error_code ec;
-    do {
-        char buf[1024];
-        size_t bytes_transferred = sock.receive(buffer(buf), {}, ec);
-        if (!ec) response.append(buf, buf + bytes_transferred);
-    } while (!ec);
+    neo4j_result_t *result = neo4j_fetch_next(results);
+    if (result == NULL) {
+        return NULL;
+    }
 
-    return (char *)response.c_str();
+    std::stringstream result;
+    for (int i = 0; i < neo4j_nfields(results); ++i) {
+        if (i != 0) {
+            ss << "�";
+        }
+
+        ss << v[i];
+    }
+
+    return (char*)ss.c_str();
 }
