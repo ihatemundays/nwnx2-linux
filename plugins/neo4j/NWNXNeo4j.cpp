@@ -118,7 +118,7 @@ char *CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
 
     std::stringstream ss;
     for (int i = 0; i < neo4j_nfields(results); ++i) {
-        char resultBuffer[256];
+        char resultBuffer[1024];
 
         if (i != 0) {
             ss << '�';
