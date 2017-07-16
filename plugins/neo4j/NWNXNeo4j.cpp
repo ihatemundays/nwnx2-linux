@@ -48,7 +48,7 @@ bool CNWNXNeo4j::LoadConfiguration() {
 bool CNWNXNeo4j::Connect() {
     neo4j_client_init();
 
-    connection = neo4j_connect((new std::string("neo4j://" + connectionParameters.hostname + ':' + connectionParameters.port)).c_str(),
+    connection = neo4j_connect((new std::string("neo4j://" + connectionParameters.hostname + ':' + connectionParameters.port))->c_str(),
                                NULL,
                                NEO4J_INSECURE);
 
