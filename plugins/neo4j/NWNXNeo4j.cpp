@@ -48,7 +48,7 @@ bool CNWNXNeo4j::LoadConfiguration() {
 bool CNWNXNeo4j::Connect() {
     neo4j_client_init();
 
-    connection = neo4j_connect("neo4j://" + connectionParameters.hostname + ':' + connectionParameters.port,
+    connection = neo4j_connect((new std::string("neo4j://" + connectionParameters.hostname + ':' + connectionParameters.port)).c_str(),
                                NULL,
                                NEO4J_INSECURE);
 
@@ -96,7 +96,7 @@ void CNWNXNeo4j::Exec(char *query) {
         return;
     }
 
-    results = neo4j_run(connection, arguments, neo4j_null);
+    results = neo4j_run(connection, query, neo4j_null);
     if (results == NULL) {
         Log(1, "Failed to run statement.");
 
@@ -118,11 +118,14 @@ char *CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
 
     std::stringstream ss;
     for (int i = 0; i < neo4j_nfields(results); ++i) {
+        char resultBuffer[256];
+
         if (i != 0) {
             ss << '�';
         }
 
-        ss << neo4j_result_field(result, i);
+        neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 256);
+        ss << resultBuffer;
     }
 
     return (char*)ss.str().c_str();
