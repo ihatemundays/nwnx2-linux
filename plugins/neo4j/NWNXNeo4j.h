@@ -9,7 +9,7 @@ using namespace std;
 
 class CNWNXNeo4j: public CNWNXBase {
 public:
-    CWNXNeo4j();
+    CNWNXNeo4j();
     ~CNWNXNeo4j();
 
     bool OnCreate(gline *config, const char* LogDir);
