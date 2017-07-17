@@ -1,6 +1,6 @@
 #include "NWNXNeo4j.h"
 
-CNWNXNeo4j::CWNXNeo4j() {
+CNWNXNeo4j::CNWNXNeo4j() {
     confKey = "NEO4J";
 }
 
