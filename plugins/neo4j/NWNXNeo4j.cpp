@@ -22,6 +22,7 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* LogDir)
     Log(0, "(c) 2017 by Wayne Chipchase / Scott Munday\n");
     Log(0, "* Module loaded successfully.\n");
 
+    /*
     if (!LoadConfiguration()) {
         return false;
     }
