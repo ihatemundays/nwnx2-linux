@@ -2,6 +2,7 @@
 
 CNWNXNeo4j::CNWNXNeo4j() {
     confKey = "NEO4J";
+    memset(&connectionParameters, 0, sizeof(connectionParameters));
 }
 
 CNWNXNeo4j::~CNWNXNeo4j() {
