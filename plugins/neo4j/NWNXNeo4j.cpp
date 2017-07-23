@@ -22,14 +22,13 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* LogDir)
     Log(0, "(c) 2017 by Wayne Chipchase / Scott Munday\n");
     Log(0, "* Module loaded successfully.\n");
 
-    /*
     if (!LoadConfiguration()) {
         return false;
     }
 
-    /*if (!Connect()) {
+    if (!Connect()) {
         return false;
-    }*/
+    }
 
     return true;
 }
@@ -41,6 +40,8 @@ bool CNWNXNeo4j::LoadConfiguration() {
 
             return false;
         }
+
+        return true;
 
         connectionParameters.hostname = (char*)((*nwnxConfig)[confKey]["hostname"].c_str());
         connectionParameters.port = (char*)((*nwnxConfig)[confKey]["port"].c_str());
@@ -59,6 +60,8 @@ bool CNWNXNeo4j::LoadConfiguration() {
 bool CNWNXNeo4j::Connect() {
     try {
         neo4j_client_init();
+
+        return true;
 
         connection = neo4j_connect((new std::string("neo4j://" + connectionParameters.hostname + ':' + connectionParameters.port))->c_str(),
                                    NULL,
