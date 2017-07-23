@@ -35,6 +35,8 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* LogDir)
 
 bool CNWNXNeo4j::LoadConfiguration() {
     try {
+        return true;
+
         if (!nwnxConfig->exists(confKey)) {
             Log(0, "o Critical Error: Section [%s] not found in nwnx2.ini.\n", confKey);
 
