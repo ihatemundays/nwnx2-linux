@@ -62,15 +62,15 @@ bool CNWNXNeo4j::Connect() {
         neo4j_config_t *config = neo4j_new_config();
 
         if (config == NULL) {
-            throw std::exception("Unable to create neo4j configuration.");
+            throw runtime_error("Unable to create neo4j configuration.");
         }
 
         if (neo4j_config_set_username(config, p.username)) {
-            throw std::exception("Unable to set username");
+            throw runtime_error("Unable to set username.");
         }
 
         if (neo4j_config_set_password(config, p.password)) {
-            throw std::exception("Unable to set password");
+            throw runtime_error("Unable to set password.");
         }
 
         connection = neo4j_connect("neo4j://" + p.hostname + ':' + p.port,
@@ -78,9 +78,7 @@ bool CNWNXNeo4j::Connect() {
                                    NEO4J_INSECURE);
 
         if (connection == NULL) {
-            Log(0, "o Connection failed.\n");
-
-            return false;
+            throw runtime_error("Unable to connect to Neo4j server.");
         }
 
         return true;

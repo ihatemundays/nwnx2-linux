@@ -3,6 +3,7 @@
 
 #include "NWNXBase.h"
 #include <neo4j-client.h>
+#include <exception>
 #include <sstream>
 
 using namespace std;
