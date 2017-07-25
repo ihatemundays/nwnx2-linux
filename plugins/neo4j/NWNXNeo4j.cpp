@@ -49,7 +49,7 @@ bool CNWNXNeo4j::LoadConfiguration() {
 
         return true;
     } catch (std::exception const& exception) {
-        cout << exception.getMessage();
+        cout << exception.what();
 
         return false;
     }
@@ -83,7 +83,7 @@ bool CNWNXNeo4j::Connect() {
 
         return true;
     } catch (std::exception const& exception) {
-        cout << exception.getMessage();
+        cout << exception.what();
 
         return false;
     }
