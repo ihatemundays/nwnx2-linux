@@ -20,7 +20,7 @@ public:
 protected:
     bool Connect();
     void Disconnect();
-    bool LoadConfiguration(gline *nwnxConfig);
+    bool LoadConfiguration();
     void Exec(char *query);
     char *Fetch(char *buffer, unsigned int bufferSize);
 
