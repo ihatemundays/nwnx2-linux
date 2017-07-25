@@ -73,9 +73,11 @@ bool CNWNXNeo4j::Connect() {
             throw runtime_error("Unable to set password.");
         }
 
-        connection = neo4j_connect("neo4j://" + p.hostname + ':' + p.port,
-                                   config,
-                                   NEO4J_INSECURE);
+        char connectionString[256];
+
+        sprintf(connectionString, "neo4j://%s:%s", p.hostname, p.port);
+
+        connection = neo4j_connect(connectionString, config, NEO4J_INSECURE);
 
         if (connection == NULL) {
             throw runtime_error("Unable to connect to Neo4j server.");
