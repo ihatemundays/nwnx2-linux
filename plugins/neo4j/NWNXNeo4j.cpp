@@ -62,15 +62,15 @@ bool CNWNXNeo4j::Connect() {
         neo4j_config_t *config = neo4j_new_config();
 
         if (config == NULL) {
-            throw new std::exception("Unable to create neo4j configuration.");
+            throw std::exception("Unable to create neo4j configuration.");
         }
 
         if (neo4j_config_set_username(config, p.username)) {
-            throw new std::exception("Unable to set username");
+            throw std::exception("Unable to set username");
         }
 
         if (neo4j_config_set_password(config, p.password)) {
-            throw new std::exception("Unable to set password");
+            throw std::exception("Unable to set password");
         }
 
         connection = neo4j_connect("neo4j://" + p.hostname + ':' + p.port,
