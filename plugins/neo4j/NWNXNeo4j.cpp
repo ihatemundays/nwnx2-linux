@@ -2,12 +2,11 @@
 
 CNWNXNeo4j::CNWNXNeo4j() {
     confKey = "NEO4J";
-    memset(p, 0, sizeof(PARAMETERS));
+    memset(&p, 0, sizeof(PARAMETERS));
 }
 
 CNWNXNeo4j::~CNWNXNeo4j() {
     Disconnect();
-
     OnRelease();
 }
 
@@ -15,9 +14,10 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory)
 {
     char log[128];
 
-    sprintf(log, "%s/nwnx_neo4j.txt", LogDir);
-    if (!CNWNXBase::OnCreate(nwnxConfig, log))
+    sprintf(log, "%s/nwnx_neo4j.txt", logDirectory);
+    if (!CNWNXBase::OnCreate(nwnxConfig, log)) {
         return false;
+    }
 
     Log(0, "NWNX Neo4j V.1.0\n");
     Log(0, "(c) 2017 by Wayne Chipchase / Scott Munday\n");
