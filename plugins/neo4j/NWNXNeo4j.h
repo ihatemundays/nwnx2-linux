@@ -12,24 +12,24 @@ public:
     CNWNXNeo4j();
     ~CNWNXNeo4j();
 
-    bool OnCreate(gline *config, const char* LogDir);
-    char* OnRequest(char* gameObject, char* Request, char* Parameters);
+    bool OnCreate(gline *config, const char* logDirectory);
+    char* OnRequest(char* gameObject, char* request, char* arguments);
     bool OnRelease();
 
 protected:
     bool Connect();
     void Disconnect();
-    bool LoadConfiguration();
+    bool LoadConfiguration(gline *nwnxConfig);
     void Exec(char *query);
     char *Fetch(char *buffer, unsigned int bufferSize);
 
 private:
-    struct ConnectionParameters {
-        std::string hostname;
-        std::string port;
-        std::string username;
-        std::string password;
-    } connectionParameters;
+    struct PARAMETERS {
+        char* hostname;
+        char* port;
+        char* username;
+        char* password;
+    } p;
 
     neo4j_connection_t *connection;
     neo4j_result_stream_t *results;

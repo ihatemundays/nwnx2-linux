@@ -2,7 +2,7 @@
 
 CNWNXNeo4j::CNWNXNeo4j() {
     confKey = "NEO4J";
-    memset(&connectionParameters, 0, sizeof(connectionParameters));
+    memset(p, 0, sizeof(PARAMETERS));
 }
 
 CNWNXNeo4j::~CNWNXNeo4j() {
@@ -11,11 +11,12 @@ CNWNXNeo4j::~CNWNXNeo4j() {
     OnRelease();
 }
 
-bool CNWNXNeo4j::OnCreate(gline *config, const char* LogDir)
+bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory)
 {
     char log[128];
+
     sprintf(log, "%s/nwnx_neo4j.txt", LogDir);
-    if (!CNWNXBase::OnCreate(config, log))
+    if (!CNWNXBase::OnCreate(nwnxConfig, log))
         return false;
 
     Log(0, "NWNX Neo4j V.1.0\n");
@@ -35,38 +36,45 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* LogDir)
 
 bool CNWNXNeo4j::LoadConfiguration() {
     try {
-        return true;
-
         if (!nwnxConfig->exists(confKey)) {
             Log(0, "o Critical Error: Section [%s] not found in nwnx2.ini.\n", confKey);
 
             return false;
         }
 
-        return true;
-
-        connectionParameters.hostname = (char*)((*nwnxConfig)[confKey]["hostname"].c_str());
-        connectionParameters.port = (char*)((*nwnxConfig)[confKey]["port"].c_str());
-        connectionParameters.username = (char*)((*nwnxConfig)[confKey]["username"].c_str());
-        connectionParameters.password = (char*)((*nwnxConfig)[confKey]["password"].c_str());
+        p.hostname = strdup((char*)((*nwnxConfig)[confKey]["hostname"].c_str()));
+        p.port = strdup((char*)((*nwnxConfig)[confKey]["port"].c_str()));
+        p.username = strdup((char*)((*nwnxConfig)[confKey]["username"].c_str()));
+        p.password = strdup((char*)((*nwnxConfig)[confKey]["password"].c_str()));
 
         return true;
-    } catch (const std::exception& e) {
-        Log(0, e.what());
+    } catch (std::exception const& exception) {
+        cout << exception.getMessage();
 
         return false;
     }
-
 }
 
 bool CNWNXNeo4j::Connect() {
     try {
         neo4j_client_init();
 
-        return true;
+        neo4j_config_t *config = neo4j_new_config();
 
-        connection = neo4j_connect((new std::string("neo4j://" + connectionParameters.hostname + ':' + connectionParameters.port))->c_str(),
-                                   NULL,
+        if (config == NULL) {
+            throw new std::exception("Unable to create neo4j configuration.");
+        }
+
+        if (neo4j_config_set_username(config, p.username)) {
+            throw new std::exception("Unable to set username");
+        }
+
+        if (neo4j_config_set_password(config, p.password)) {
+            throw new std::exception("Unable to set password");
+        }
+
+        connection = neo4j_connect("neo4j://" + p.hostname + ':' + p.port,
+                                   config,
                                    NEO4J_INSECURE);
 
         if (connection == NULL) {
@@ -76,8 +84,8 @@ bool CNWNXNeo4j::Connect() {
         }
 
         return true;
-    } catch (const std::exception& e) {
-        Log(0, e.what());
+    } catch (std::exception const& exception) {
+        cout << exception.getMessage();
 
         return false;
     }
