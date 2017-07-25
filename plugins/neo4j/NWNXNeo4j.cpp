@@ -36,11 +36,11 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory)
 
 bool CNWNXNeo4j::LoadConfiguration() {
     try {
-        if (!nwnxConfig->exists(confKey)) {
+        /*if (!nwnxConfig->exists(confKey)) {
             Log(0, "o Critical Error: Section [%s] not found in nwnx2.ini.\n", confKey);
 
             return false;
-        }
+        }*/
 
         p.hostname = strdup((char*)((*nwnxConfig)[confKey]["hostname"].c_str()));
         p.port = strdup((char*)((*nwnxConfig)[confKey]["port"].c_str()));
@@ -48,8 +48,8 @@ bool CNWNXNeo4j::LoadConfiguration() {
         p.password = strdup((char*)((*nwnxConfig)[confKey]["password"].c_str()));
 
         return true;
-    } catch (std::exception const& exception) {
-        cout << exception.what();
+    } catch (exception const& error) {
+        cerr << "Error loading configuration. " << error.what() << endl;
 
         return false;
     }
@@ -80,12 +80,12 @@ bool CNWNXNeo4j::Connect() {
         connection = neo4j_connect(connectionString, config, NEO4J_INSECURE);
 
         if (connection == NULL) {
-            throw runtime_error("Unable to connect to Neo4j server.");
+            throw runtime_error("Unable to connect to server.");
         }
 
         return true;
-    } catch (std::exception const& exception) {
-        cout << exception.what();
+    } catch (exception const& error) {
+        cerr << "Error connecting client to Neo4j server. " << error.what() << endl;
 
         return false;
     }
