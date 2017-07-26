@@ -40,7 +40,7 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory)
 
 bool CNWNXNeo4j::LoadConfiguration() {
     try {
-        if (nwnxConfig == null) {
+        if (nwnxConfig == nullptr) {
             throw runtime_error("Configuration is not available.");
         }
         /*if (!nwnxConfig->exists(confKey)) {
