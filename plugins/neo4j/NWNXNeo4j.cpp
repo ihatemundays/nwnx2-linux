@@ -40,16 +40,12 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory)
 
 bool CNWNXNeo4j::LoadConfiguration() {
     try {
-        cout << "test" << endl;
-
         if (nwnxConfig == nullptr) {
             throw runtime_error("Configuration is not available.");
         }
-        /*if (!nwnxConfig->exists(confKey)) {
-            Log(0, "o Critical Error: Section [%s] not found in nwnx2.ini.\n", confKey);
-
-            return false;
-        }*/
+        if (!nwnxConfig->exists(confKey)) {
+            throw runtime_error("Section [" + confKey + "] not found in nwnx2.ini.");
+        }
 
         p.hostname = strdup((char*)((*nwnxConfig)[confKey]["hostname"].c_str()));
         p.port = strdup((char*)((*nwnxConfig)[confKey]["port"].c_str()));
