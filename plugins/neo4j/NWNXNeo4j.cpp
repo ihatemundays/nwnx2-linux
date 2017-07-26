@@ -43,8 +43,13 @@ bool CNWNXNeo4j::LoadConfiguration() {
         if (nwnxConfig == nullptr) {
             throw runtime_error("Configuration is not available.");
         }
+
         if (!nwnxConfig->exists(confKey)) {
-            throw runtime_error("Section [" + confKey + "] not found in nwnx2.ini.");
+            stringstream ss;
+
+            ss << "Section [" << confKey << "] not found in nwnx2.ini";
+            
+            throw runtime_error(ss.str());
         }
 
         p.hostname = strdup((char*)((*nwnxConfig)[confKey]["hostname"].c_str()));
