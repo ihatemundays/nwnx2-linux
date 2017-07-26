@@ -16,7 +16,7 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory)
         char log[128];
 
         sprintf(log, "%s/nwnx_neo4j.txt", logDirectory);
-        if (!CNWNXBase::OnCreate(nwnxConfig, log)) {
+        if (!CNWNXBase::OnCreate(config, log)) {
             return false;
         }
 
