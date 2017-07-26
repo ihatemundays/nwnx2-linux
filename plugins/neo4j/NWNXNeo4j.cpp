@@ -40,6 +40,8 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory)
 
 bool CNWNXNeo4j::LoadConfiguration() {
     try {
+        cout << "test" << endl;
+
         if (nwnxConfig == nullptr) {
             throw runtime_error("Configuration is not available.");
         }
