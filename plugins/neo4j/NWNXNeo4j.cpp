@@ -40,6 +40,9 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory)
 
 bool CNWNXNeo4j::LoadConfiguration() {
     try {
+        if (nwnxConfig == null) {
+            throw runtime_error("Configuration is not available.");
+        }
         /*if (!nwnxConfig->exists(confKey)) {
             Log(0, "o Critical Error: Section [%s] not found in nwnx2.ini.\n", confKey);
 
@@ -154,7 +157,7 @@ char *CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
         return NULL;
     }
 
-    std::stringstream ss;
+    stringstream ss;
     for (int i = 0; i < neo4j_nfields(results); ++i) {
         char resultBuffer[1024];
 
