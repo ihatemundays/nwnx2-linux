@@ -15,20 +15,17 @@ PLUGININFO pluginInfo = {
         0
 };
 
-extern "C" PLUGININFO* GetPluginInfo(DWORD nwnxVersion)
-{
+extern "C" PLUGININFO* GetPluginInfo(DWORD nwnxVersion) {
     return &pluginInfo;
 }
 
-extern "C" int InitPlugin(PLUGINLINK *link)
-{
+extern "C" int InitPlugin(PLUGINLINK *link) {
     pluginLink = link;
 
     return 0;
 }
 
 extern "C"
-CNWNXBase* GetClassObject()
-{
+CNWNXBase* GetClassObject() {
     return &neo4j;
 }

@@ -10,8 +10,7 @@ CNWNXNeo4j::~CNWNXNeo4j() {
     OnRelease();
 }
 
-bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory)
-{
+bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory) {
     try {
         char log[128];
 
@@ -172,28 +171,25 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
 
     int columns = neo4j_nfields(results);
     if (columns < 0) {
-        neo4j_perror(stderr, errno, "No columns were returned");
+        neo4j_perror(stderr, errno, "No columns were found on result");
 
         return NULL;
     }
 
-    neo4j_result_t *result = neo4j_fetch_next(results);
-    if (result == NULL) {
-        neo4j_perror(stderr, errno, "Failed to retrieve a record from the result");
+    neo4j_result_t *result;
+    if ((result = neo4j_fetch_next(results)) != NULL) {
+        stringstream ss;
 
-        return NULL;
-    }
+        for (int i = 0; i < columns; ++i) {
+            char resultBuffer[1024];
 
-    stringstream ss;
-    for (int i = 0; i < columns; ++i) {
-        char resultBuffer[1024];
+            if (i != 0) {
+                ss << '�';
+            }
 
-        if (i != 0) {
-            ss << '�';
+            neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 256);
+            ss << resultBuffer;
         }
-
-        neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 256);
-        ss << resultBuffer;
     }
 
     cout << "Record: " << ss.str() << endl;
