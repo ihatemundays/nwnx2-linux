@@ -89,10 +89,15 @@ bool CNWNXNeo4j::Connect() {
 
         sprintf(connectionString, "neo4j://%s:%s", p.hostname, p.port);
 
-        connection = neo4j_connect(connectionString, config, NEO4J_CONNECT_DEFAULT);
+        connection = neo4j_connect(connectionString, config, NEO4J_INSECURE);
 
         if (connection == NULL) {
             throw runtime_error("Unable to connect to server.");
+        }
+
+        session = neo4j_new_session(connection);
+        if (session == NULL) {
+            throw runtime_error("Unable to create a new session.");
         }
 
         cout << "Connected to Neo4j." << endl;

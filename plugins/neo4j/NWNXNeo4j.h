@@ -33,6 +33,7 @@ private:
     } p;
 
     neo4j_connection_t *connection;
+    neo4j_session_t *session;
     neo4j_result_stream_t *results;
 };
 
