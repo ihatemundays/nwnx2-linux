@@ -89,7 +89,7 @@ bool CNWNXNeo4j::Connect() {
 
         sprintf(connectionString, "neo4j://%s:%s", p.hostname, p.port);
 
-        connection = neo4j_connect(connectionString, config, NEO4J_INSECURE);
+        connection = neo4j_connect(connectionString, config, NEO4J_CONNECT_DEFAULT);
 
         if (connection == NULL) {
             throw runtime_error("Unable to connect to server.");
