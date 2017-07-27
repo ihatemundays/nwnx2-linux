@@ -171,7 +171,7 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     }
 
     neo4j_result_t *result = neo4j_fetch_next(results);
-    if (results == NULL) {
+    if (result == NULL) {
         neo4j_perror(stderr, errno, "Failed to retrieve a record from the result");
 
         return NULL;
