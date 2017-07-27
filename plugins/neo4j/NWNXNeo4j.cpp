@@ -142,12 +142,14 @@ bool CNWNXNeo4j::OnRelease () {
 void CNWNXNeo4j::Exec(char *query) {
     Disconnect();
     if (!Connect()) {
+        neo4j_perror(stderr, errno, "Failed to connect.");
+
         return;
     }
 
     results = neo4j_run(connection, query, neo4j_null);
     if (results == NULL) {
-        cerr << "Error on Neo4j execution. Failed to run statement.";
+        neo4j_perror(stderr, errno, "Failed to execute query.");
 
         return;
     }
@@ -155,13 +157,15 @@ void CNWNXNeo4j::Exec(char *query) {
 
 char *CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     if (results == NULL) {
-        cerr << "Error on Neo4j fetch. Failed to fetch result.";
+        neo4j_perror(stderr, errno, "There were no results found.");
 
         return NULL;
     }
 
     neo4j_result_t *result = neo4j_fetch_next(results);
     if (result == NULL) {
+        neo4j_perror(stderr, errno, "Failed to retrieve a record from the result.");
+
         return NULL;
     }
 
@@ -177,7 +181,7 @@ char *CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
         ss << resultBuffer;
     }
 
-    cout << ss.str() << endl;
+    cout << "Record: " << ss.str() << endl;
 
     return (char*)ss.str().c_str();
 }
