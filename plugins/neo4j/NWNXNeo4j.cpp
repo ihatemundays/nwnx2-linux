@@ -117,7 +117,7 @@ void CNWNXNeo4j::Disconnect() {
 
     neo4j_client_cleanup();
 
-    cout << "Disconnected to Neo4j." << endl;
+    cout << "Disconnected from Neo4j." << endl;
 }
 
 char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
