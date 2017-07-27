@@ -40,7 +40,7 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory)
 
 bool CNWNXNeo4j::LoadConfiguration() {
     try {
-        if (nwnxConfig == nullptr) {
+        if (nwnxConfig == NULL) {
             throw runtime_error("Configuration is not available.");
         }
 
@@ -48,7 +48,7 @@ bool CNWNXNeo4j::LoadConfiguration() {
             stringstream ss;
 
             ss << "Section [" << confKey << "] not found in nwnx2.ini";
-            
+
             throw runtime_error(ss.str());
         }
 
@@ -56,6 +56,9 @@ bool CNWNXNeo4j::LoadConfiguration() {
         p.port = strdup((char*)((*nwnxConfig)[confKey]["port"].c_str()));
         p.username = strdup((char*)((*nwnxConfig)[confKey]["username"].c_str()));
         p.password = strdup((char*)((*nwnxConfig)[confKey]["password"].c_str()));
+
+        cout << "Neo4j URL: neo4j://" << p.hostname << ":" << p.port << endl;
+        cout << "Credentials: " << p.username << ":" << p.password << endl;
 
         return true;
     } catch (exception const& error) {
@@ -93,6 +96,8 @@ bool CNWNXNeo4j::Connect() {
             throw runtime_error("Unable to connect to server.");
         }
 
+        cout << "Connected to Neo4j." << endl;
+
         return true;
     } catch (exception const& error) {
         cerr << "Error connecting client to Neo4j server. " << error.what() << endl;
@@ -115,8 +120,8 @@ void CNWNXNeo4j::Disconnect() {
 
 char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
     try {
-        Log(2, "Request: \"%s\"\n", request);
-        Log(3, "Arguments:  \"%s\"\n", arguments);
+        cout << "Request: " << request << endl;
+        cout << "Arguments: " << arguments << endl;
 
         if (strcmp(request, "EXEC") == 0) {
             Exec(arguments);
@@ -142,7 +147,7 @@ void CNWNXNeo4j::Exec(char *query) {
 
     results = neo4j_run(connection, query, neo4j_null);
     if (results == NULL) {
-        Log(1, "Failed to run statement.");
+        cerr << "Error on Neo4j execution. Failed to run statement.";
 
         return;
     }
@@ -150,7 +155,7 @@ void CNWNXNeo4j::Exec(char *query) {
 
 char *CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     if (results == NULL) {
-        Log(1, "Failed to fetch result.");
+        cerr << "Error on Neo4j fetch. Failed to fetch result.";
 
         return NULL;
     }
@@ -171,6 +176,8 @@ char *CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
         neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 256);
         ss << resultBuffer;
     }
+
+    cout << ss.str() << endl;
 
     return (char*)ss.str().c_str();
 }
