@@ -116,6 +116,8 @@ void CNWNXNeo4j::Disconnect() {
     }
 
     neo4j_client_cleanup();
+
+    cout << "Disconnected to Neo4j." << endl;
 }
 
 char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
@@ -123,9 +125,9 @@ char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
         cout << "Request: " << request << endl;
         cout << "Arguments: " << arguments << endl;
 
-        if (strcmp(request, "EXEC") == 0) {
+        if (strncmp(request, "EXEC", 4) == 0) {
             Exec(arguments);
-        } else if (strcmp(request, "FETCH") == 0) {
+        } else if (strncmp(request, "FETCH", 5) == 0) {
             return Fetch(arguments, strlen(arguments));
         }
 
@@ -155,7 +157,7 @@ void CNWNXNeo4j::Exec(char *query) {
     }
 }
 
-char *CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
+char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     if (results == NULL) {
         neo4j_perror(stderr, errno, "There were no results found.");
 
