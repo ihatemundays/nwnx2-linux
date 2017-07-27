@@ -170,6 +170,13 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
         return NULL;
     }
 
+    int columns = neo4j_nfields(results);
+    if (columns < 0) {
+        neo4j_perror(stderr, errno, "No columns were returned");
+
+        return NULL;
+    }
+
     neo4j_result_t *result = neo4j_fetch_next(results);
     if (result == NULL) {
         neo4j_perror(stderr, errno, "Failed to retrieve a record from the result");
@@ -178,7 +185,7 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     }
 
     stringstream ss;
-    for (int i = 0; i < neo4j_nfields(results); ++i) {
+    for (int i = 0; i < columns; ++i) {
         char resultBuffer[1024];
 
         if (i != 0) {
