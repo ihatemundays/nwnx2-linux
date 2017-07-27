@@ -170,29 +170,34 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     }
 
     int columns = neo4j_nfields(results);
-    if (columns < 0) {
+    if (columns <= 0) {
         neo4j_perror(stderr, errno, "No columns were found on result");
 
         return NULL;
     }
 
     neo4j_result_t *result;
+
+    if ((result = neo4j_fetch_next(results)) == NULL) {
+        neo4j_perror(stderr, errno, "No more records on result");
+
+        return NULL;
+    }
+
     stringstream ss;
 
-    if ((result = neo4j_fetch_next(results)) != NULL) {
-        cout << "Fetching record." << endl;
+    cout << "Fetching record." << endl;
 
-        for (int i = 0; i < columns; ++i) {
-            char resultBuffer[1024];
+    for (int i = 0; i < columns; ++i) {
+        char resultBuffer[1024];
 
-            if (i != 0) {
-                ss << '\u0444';
-            }
-
-            neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 1024);
-            ss << resultBuffer;
+        if (i != 0) {
+            ss << '\u0444';
         }
+
+        neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 1024);
+        ss << resultBuffer;
     }
-    
+
     return (char*)ss.str().c_str();
 }
