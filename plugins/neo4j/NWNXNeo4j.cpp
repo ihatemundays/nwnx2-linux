@@ -177,9 +177,9 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     }
 
     neo4j_result_t *result;
+    stringstream ss;
+    
     if ((result = neo4j_fetch_next(results)) != NULL) {
-        stringstream ss;
-
         for (int i = 0; i < columns; ++i) {
             char resultBuffer[1024];
 
