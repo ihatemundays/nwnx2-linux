@@ -131,7 +131,7 @@ char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
             Exec(arguments);
         } else if (strncmp(request, "FETCH", 5) == 0) {
             cout << "Fetching Neo4j result..." << endl;
-            
+
             return Fetch(arguments, strlen(arguments));
         }
 
