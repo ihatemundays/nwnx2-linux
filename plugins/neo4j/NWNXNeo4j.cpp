@@ -180,14 +180,16 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     stringstream ss;
     
     if ((result = neo4j_fetch_next(results)) != NULL) {
+        cout << "Fetching record." << endl;
+
         for (int i = 0; i < columns; ++i) {
             char resultBuffer[1024];
 
             if (i != 0) {
-                ss << '�';
+                ss << '\u0444';
             }
 
-            neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 256);
+            neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 1024);
             ss << resultBuffer;
         }
     }
