@@ -126,8 +126,12 @@ char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
         cout << "Arguments: " << arguments << endl;
 
         if (strncmp(request, "EXEC", 4) == 0) {
+            cout << "Executing Neo4j query..." << endl;
+
             Exec(arguments);
         } else if (strncmp(request, "FETCH", 5) == 0) {
+            cout << "Fetching Neo4j result..." << endl;
+            
             return Fetch(arguments, strlen(arguments));
         }
 
@@ -155,6 +159,8 @@ void CNWNXNeo4j::Exec(char *query) {
 
         return;
     }
+
+    cout << "Neo4j query executed successfully." << endl;
 }
 
 char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
