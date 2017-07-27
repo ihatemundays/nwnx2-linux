@@ -95,11 +95,6 @@ bool CNWNXNeo4j::Connect() {
             throw runtime_error("Unable to connect to server.");
         }
 
-        session = neo4j_new_session(connection);
-        if (session == NULL) {
-            throw runtime_error("Unable to create a new session.");
-        }
-
         cout << "Connected to Neo4j." << endl;
 
         return true;
