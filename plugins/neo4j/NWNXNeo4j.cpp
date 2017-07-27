@@ -179,8 +179,6 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     neo4j_result_t *result;
     stringstream ss;
 
-    ss << "";
-
     if ((result = neo4j_fetch_next(results)) != NULL) {
         cout << "Fetching record." << endl;
 
@@ -195,8 +193,6 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
             ss << resultBuffer;
         }
     }
-
-    cout << "Record: " << ss.str() << endl;
-
+    
     return (char*)ss.str().c_str();
 }
