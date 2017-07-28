@@ -27,10 +27,6 @@ bool CNWNXNeo4j::OnCreate(gline *config, const char* logDirectory) {
             return false;
         }
 
-        if (!Connect()) {
-            return false;
-        }
-
         return true;
     } catch (exception const& error) {
         cerr << "Unable to create Neo4j plugin. " << error.what() << endl;
@@ -131,7 +127,7 @@ char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
         } else if (strncmp(request, "FETCH", 5) == 0) {
             cout << "Fetching Neo4j result..." << endl;
 
-            return Fetch(arguments, strlen(arguments));
+            return Fetch();
         }
 
         return NULL;
@@ -145,7 +141,9 @@ bool CNWNXNeo4j::OnRelease () {
 }
 
 void CNWNXNeo4j::Exec(char *query) {
-    Disconnect();
+    records.clear();
+    recordsIterator = records.begin();
+
     if (!Connect()) {
         neo4j_perror(stderr, errno, "Failed to connect");
 
@@ -159,15 +157,19 @@ void CNWNXNeo4j::Exec(char *query) {
         return;
     }
 
-    char* result;
-    while ((result = Fetch("", 128)) != NULL) {
-        cout << result << endl;
+    char* record;
+    while ((record = FetchRecord()) != NULL) {
+        cout << "Record: " << record << endl;
+
+        records.push_back(record);
     }
+
+    Disconnect();
 
     cout << "Neo4j query executed successfully." << endl;
 }
 
-char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
+char* CNWNXNeo4j::FetchRecord() {
     if (results == NULL) {
         neo4j_perror(stderr, errno, "There were no results found");
 
@@ -202,4 +204,16 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
     }
 
     return (char*)ss.str().c_str();
+}
+
+char* CNWNXNeo4j::Fetch() {
+    if (recordsIterator < records.end()) {
+        char* record = *recordsIterator;
+
+        ++recordsIterator;
+
+        return record;
+    }
+
+    return NULL;
 }

@@ -5,6 +5,7 @@
 #include <neo4j-client.h>
 #include <exception>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -22,7 +23,8 @@ protected:
     void Disconnect();
     bool LoadConfiguration();
     void Exec(char *query);
-    char *Fetch(char *buffer, unsigned int bufferSize);
+    char* FetchRecord();
+    char* Fetch();
 
 private:
     struct PARAMETERS {
@@ -34,6 +36,8 @@ private:
 
     neo4j_connection_t* connection;
     neo4j_result_stream_t* results;
+    vector<char*> records;
+    vector<char*>::iterator recordsIterator;
 };
 
 #endif
