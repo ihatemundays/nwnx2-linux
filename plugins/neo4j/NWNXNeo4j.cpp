@@ -198,7 +198,7 @@ char* CNWNXNeo4j::FetchRecord() {
         char resultBuffer[1024];
 
         neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 1024);
-        ss << strlen(resultbuffer) << '|' << resultBuffer;
+        ss << strlen(resultBuffer) << '|' << resultBuffer;
     }
 
     return (char*)ss.str().c_str();
