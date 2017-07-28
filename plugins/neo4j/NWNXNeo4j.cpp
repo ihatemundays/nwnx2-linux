@@ -159,6 +159,11 @@ void CNWNXNeo4j::Exec(char *query) {
         return;
     }
 
+    char* result;
+    while ((result = Fetch("", 128)) != null) {
+        cout << result;
+    }
+
     cout << "Neo4j query executed successfully." << endl;
 }
 
@@ -176,11 +181,8 @@ char* CNWNXNeo4j::Fetch(char *buffer, unsigned int bufferSize) {
         return NULL;
     }
 
-    neo4j_result_t *result;
-
+    neo4j_result_t* result;
     if ((result = neo4j_fetch_next(results)) == NULL) {
-        neo4j_perror(stderr, errno, "No more records on result");
-
         return NULL;
     }
 

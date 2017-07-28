@@ -32,8 +32,8 @@ private:
         char* password;
     } p;
 
-    neo4j_connection_t *connection;
-    neo4j_result_stream_t *results;
+    neo4j_connection_t* connection;
+    neo4j_result_stream_t* results;
 };
 
 #endif
