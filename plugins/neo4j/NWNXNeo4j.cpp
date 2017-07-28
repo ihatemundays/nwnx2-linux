@@ -207,7 +207,11 @@ char* CNWNXNeo4j::FetchRecord() {
 }
 
 char* CNWNXNeo4j::Fetch() {
+    cout << "Test: " << records.end() << endl;
+
     if (recordsIterator < records.end()) {
+        cout << "Record: " << recordsIterator;
+
         char* record = *recordsIterator;
 
         ++recordsIterator;
