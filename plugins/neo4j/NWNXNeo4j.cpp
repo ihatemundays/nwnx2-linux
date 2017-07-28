@@ -160,8 +160,8 @@ void CNWNXNeo4j::Exec(char *query) {
     }
 
     char* result;
-    while ((result = Fetch("", 128)) != null) {
-        cout << result;
+    while ((result = Fetch("", 128)) != NULL) {
+        cout << result << endl;
     }
 
     cout << "Neo4j query executed successfully." << endl;
