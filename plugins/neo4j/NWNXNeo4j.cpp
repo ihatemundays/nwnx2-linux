@@ -167,6 +167,9 @@ void CNWNXNeo4j::Exec(char *query) {
 
     Disconnect();
 
+    cout << "Records: " << records.size() << endl;
+    cout << Fetch() << endl;
+
     cout << "Neo4j query executed successfully." << endl;
 }
 
@@ -208,7 +211,6 @@ char* CNWNXNeo4j::FetchRecord() {
 }
 
 char* CNWNXNeo4j::Fetch() {
-    cout << "Records: " << records.size() << endl;
     cout << "Record: " << *recordsIterator << endl;
 
     if (recordsIterator != records.end()) {
