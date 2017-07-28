@@ -197,12 +197,8 @@ char* CNWNXNeo4j::FetchRecord() {
     for (int i = 0; i < columns; ++i) {
         char resultBuffer[1024];
 
-        if (i != 0) {
-            ss << '\u0444';
-        }
-
         neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 1024);
-        ss << resultBuffer;
+        ss << strlen(resultbuffer) << '|' << resultBuffer;
     }
 
     return (char*)ss.str().c_str();
