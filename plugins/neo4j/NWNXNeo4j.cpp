@@ -6,7 +6,6 @@ CNWNXNeo4j::CNWNXNeo4j() {
 }
 
 CNWNXNeo4j::~CNWNXNeo4j() {
-    Disconnect();
     OnRelease();
 }
 
@@ -137,7 +136,9 @@ char* CNWNXNeo4j::OnRequest(char* gameObject, char* request, char* arguments) {
 }
 
 bool CNWNXNeo4j::OnRelease () {
-    return CNWNXBase::OnRelease();
+    Disconnect();
+
+    return true;
 }
 
 void CNWNXNeo4j::Exec(char *query) {
@@ -166,9 +167,6 @@ void CNWNXNeo4j::Exec(char *query) {
     recordsIterator = records.begin();
 
     Disconnect();
-
-    cout << "Records: " << records.size() << endl;
-    cout << Fetch() << endl;
 
     cout << "Neo4j query executed successfully." << endl;
 }
