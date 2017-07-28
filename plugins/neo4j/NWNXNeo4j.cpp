@@ -142,7 +142,6 @@ bool CNWNXNeo4j::OnRelease () {
 
 void CNWNXNeo4j::Exec(char *query) {
     records.clear();
-    recordsIterator = records.begin();
 
     if (!Connect()) {
         neo4j_perror(stderr, errno, "Failed to connect");
@@ -164,6 +163,8 @@ void CNWNXNeo4j::Exec(char *query) {
         records.push_back(record);
     }
 
+    recordsIterator = records.begin();
+    
     Disconnect();
 
     cout << "Neo4j query executed successfully." << endl;
