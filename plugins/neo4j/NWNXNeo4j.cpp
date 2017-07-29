@@ -205,12 +205,14 @@ char* CNWNXNeo4j::FetchRecord() {
 }
 
 char* CNWNXNeo4j::Fetch() {
-    cout << "Record: " << *recordsIterator << endl;
+    cout << "Record: " << strdup(*recordsIterator) << endl;
 
     if (recordsIterator != records.end()) {
         char* record = strdup(*recordsIterator);
 
         ++recordsIterator;
+
+        cout << "Record 2: " << record << endl;
 
         return record;
     }
