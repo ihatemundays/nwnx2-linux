@@ -199,7 +199,7 @@ char* CNWNXNeo4j::FetchRecord() {
 
         neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 1024);
 
-        string result = new string(resultBuffer, 1, strlen(resultBuffer) - 2); // Drop the quotes.
+        string result = string(resultBuffer, 1, strlen(resultBuffer) - 2); // Drop the quotes.
 
         ss << result.length() << '|' << result;
     }
