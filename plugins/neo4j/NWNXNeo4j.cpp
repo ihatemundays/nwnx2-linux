@@ -198,6 +198,10 @@ char* CNWNXNeo4j::FetchRecord() {
         char resultBuffer[1024];
 
         neo4j_ntostring(neo4j_result_field(result, i), resultBuffer, 1024);
+
+        resultBuffer += 1; // Drop initial quote.
+        resultBuffer[strlen(resultBuffer) - 2] = '\0'; // Drop last quote.
+
         ss << strlen(resultBuffer) << '|' << resultBuffer;
     }
 
